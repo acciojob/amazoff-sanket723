@@ -12,13 +12,13 @@ public class OrderRepository {
     HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
     HashMap<String,List<String>> orderPartnerHashMap;
 
-    HashMap<String,String> orderId_partnerId_Map;
+   // HashMap<String,String> orderId_partnerId_Map;
 
     public OrderRepository() {
         this.orderHashMap = new HashMap<>();
         this.deliveryPartnerHashMap = new HashMap<>();
         this.orderPartnerHashMap = new HashMap<>();
-        this.orderId_partnerId_Map = new HashMap<>();
+       // this.orderId_partnerId_Map = new HashMap<>();
     }
 
     public void addOrder(Order order){
@@ -42,7 +42,7 @@ public class OrderRepository {
             orderPartnerHashMap.get(partnerId).add(orderId);
             numberOfOrders++;
         }
-        orderId_partnerId_Map.put(orderId,partnerId);
+       // orderId_partnerId_Map.put(orderId,partnerId);
         deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(numberOfOrders);
     }
 
@@ -123,15 +123,31 @@ public class OrderRepository {
     }
 
     public String getLastDeliveryTimeByPartnerId(String partnerId){
+        String time ="";
         List<String> list = orderPartnerHashMap.get(partnerId);
         int n = list.size();
         String s = list.get(n-1);
-        int time = orderHashMap.get(s).getDeliveryTime();
-        int hours = time / 60; //since both are ints, you get an int
-        int minutes = time % 60;
-        System.out.printf("%d:%02d", hours, minutes);
+        int deliveryTime = orderHashMap.get(s).getDeliveryTime();
 
-        return Integer.toString(time);
+        int hour = deliveryTime / 60;
+        String sHour = "";
+        if (hour < 10) {
+            sHour = "0" + String.valueOf(hour);
+        } else {
+            sHour = String.valueOf(hour);
+        }
+        int min = deliveryTime % 60;
+        String sMin = "";
+        if (min < 10) {
+            sMin = "0" + String.valueOf(min);
+        } else {
+            sMin = String.valueOf(min);
+        }
+
+        time = sHour + ":" + sMin;
+
+        return time;
+
     }
 
     public void deletePartnerById(String partnerId){
