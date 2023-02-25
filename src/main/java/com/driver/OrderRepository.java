@@ -28,14 +28,18 @@ public class OrderRepository {
     }
 
     public void addOrderPartnerPair(String orderId,String partnerId){
+        int numberOfOrders = deliveryPartnerHashMap.get(partnerId).getNumberOfOrders();
         if(!orderPartnerHashMap.containsKey(partnerId)){
             List<String> list = new ArrayList<>();
             list.add(orderId);
             orderPartnerHashMap.put(partnerId,list);
+            numberOfOrders++;
         }
         else{
             orderPartnerHashMap.get(partnerId).add(orderId);
+            numberOfOrders++;
         }
+        deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(numberOfOrders);
     }
 
     public Order getOrderById(String orderId){
@@ -88,20 +92,26 @@ public class OrderRepository {
     }
 
     public int getCountOfUnassignedOrders(){
-        int count = 0;
-        for(String orderID : orderHashMap.keySet()){
-            if(!orderPartnerHashMap.containsValue(orderID)){
-                count++;
-            }
+        int totalNumberOfOrders=0;
+        for(String s : deliveryPartnerHashMap.keySet()){
+            int n = deliveryPartnerHashMap.get(s).getNumberOfOrders();
+            totalNumberOfOrders+=n;
         }
-        return count;
+        return orderHashMap.size()-totalNumberOfOrders;
+          //int count = 0;
+//        for(String orderID : orderHashMap.keySet()){
+//            if(!orderPartnerHashMap.containsValue(orderID)){
+//                count++;
+//            }
+//        }
+//        return count;
     }
 
     public int getOrdersLeftAfterGivenTimeByPartnerId(String time,String partnerId){
         int count = 0;
-        int timeInt = Integer.valueOf(time);
+        int deliveryTime = Integer.parseInt(time.substring(0,2)) * 60 + Integer.parseInt(time.substring(3));
         for(String s : orderPartnerHashMap.get(partnerId)){
-            if(orderHashMap.get(s).getDeliveryTime() > timeInt){
+            if(orderHashMap.get(s).getDeliveryTime() > deliveryTime){
                 count++;
             }
         }
@@ -124,9 +134,18 @@ public class OrderRepository {
 
     public void deleteOrderById(String orderId){
         for(String s : orderPartnerHashMap.keySet()){
-            if(orderPartnerHashMap.get(s).contains(orderId)){
-                orderPartnerHashMap.remove(s);
+            boolean flag =false;
+            for(String s1 : orderPartnerHashMap.get(s)){
+                if(s1.equals(orderId)){
+                    orderPartnerHashMap.remove(s);
+                    flag=true;
+                    break;
+                }
             }
+            if(flag==true) break;
+//            if(orderPartnerHashMap.get(s).contains(orderId)){
+//                orderPartnerHashMap.remove(s);
+//            }
         }
         orderHashMap.remove(orderId);
     }
