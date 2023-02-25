@@ -12,13 +12,13 @@ public class OrderRepository {
     HashMap<String,DeliveryPartner> deliveryPartnerHashMap;
     HashMap<String,List<String>> orderPartnerHashMap;
 
-   // HashMap<String,String> orderId_partnerId_Map;
+    HashMap<String,String> orderId_partnerId_Map;
 
     public OrderRepository() {
         this.orderHashMap = new HashMap<>();
         this.deliveryPartnerHashMap = new HashMap<>();
         this.orderPartnerHashMap = new HashMap<>();
-        //this.orderId_partnerId_Map = new HashMap<>();
+        this.orderId_partnerId_Map = new HashMap<>();
     }
 
     public void addOrder(Order order){
@@ -42,7 +42,7 @@ public class OrderRepository {
             orderPartnerHashMap.get(partnerId).add(orderId);
             numberOfOrders++;
         }
-       // orderId_partnerId_Map.put(orderId,partnerId);
+        orderId_partnerId_Map.put(orderId,partnerId);
         deliveryPartnerHashMap.get(partnerId).setNumberOfOrders(numberOfOrders);
     }
 
