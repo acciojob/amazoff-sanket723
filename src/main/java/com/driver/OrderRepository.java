@@ -127,6 +127,9 @@ public class OrderRepository {
         int n = list.size();
         String s = list.get(n-1);
         int time = orderHashMap.get(s).getDeliveryTime();
+        int hours = time / 60; //since both are ints, you get an int
+        int minutes = time % 60;
+        System.out.printf("%d:%02d", hours, minutes);
 
         return Integer.toString(time);
     }
@@ -137,8 +140,8 @@ public class OrderRepository {
     }
 
     public void deleteOrderById(String orderId){
+        boolean flag =false;
         for(String s : orderPartnerHashMap.keySet()){
-            boolean flag =false;
             for(String s1 : orderPartnerHashMap.get(s)){
                 if(s1.equals(orderId)){
                     orderPartnerHashMap.remove(s);
@@ -151,6 +154,7 @@ public class OrderRepository {
 //                orderPartnerHashMap.remove(s);
 //            }
         }
+        if(flag==false) return;
         orderHashMap.remove(orderId);
     }
 
